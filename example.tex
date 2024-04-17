@@ -1,0 +1,160 @@
+% # INFO:
+% this file will produce a few warnings, even when working correctly:
+% - using fallback Bibtex backend, cased because of the older backend, which may not support all features
+% - Bad type area setting, caused by using a landscape page. The type area is malformed, but this is no problem if you only include external pages
+
+
+% # choosing a document class:
+% The command below is the first one you will see in pretty much any LaTeX document. It sets up the so called documentclass,
+% which is what determines all of your styling and sets up loads of stuff for you. In general there are classes for pretty much
+% every type of document you could need, but this project provides a few classes specialized for the Hochschule Hannover.
+% You can find information about the classes and the options in the README, but here is an example setup with load of comments:
+\documentclass[	%----------------------Preamble---------------------------------------------------%
+		fontsize=11pt,  % fontsize
+		a4paper,	    % papersize
+		%twoside,		% double sided layout
+		german,		% document language (also numberingsystem)
+		%ngerman,		% document language (also numberingsystem)
+		sans,			% font type (sans/roman)
+		f4,				% HsH facultie (f1-f5)
+		%draft			% quicker compilations, images are not included
+	]{HsH-report}		% documentclass
+
+
+% # the preamble:
+% everything between `\docuemtnclass' and `\begin{document}' is called the preamble. Here you configure all settings for your document.
+% The `\documentclass' command is actually part of that configuration. Lets see what you could do here:
+
+
+% # packages
+% To extend LaTeXes basic functionality, you can load additional packages. Some are already loaded, but others you load in as needed.
+% Check the README about what's already loaded and what's recommended.
+% Also, this classfiles automaticly check for a file called `config.tex', in which you can collect common configurations and reuse them across
+% files in this and/or multiple projects. If you use the full template from GitLab, it provied a `config.tex' which only applies the settings,
+% if the corresponding package is loaded, making it even more reusable.
+%
+% Here are some packages we are going to need with some explanations:
+\usepackage{color}		% for colouring stuff
+\usepackage{siunitx}	% units
+\usepackage{listings}	% including formated code snippets
+\usepackage{csvsimple}	% for importing CSV files
+\usepackage{subfigure}	% for subfigures
+\usepackage{soul}		% strikethrough text
+\usepackage{amssymb}	% for spectial Math symbols
+\usepackage{enumitem}	% more list options
+\usepackage{lipsum}		% dummy text
+
+
+% # bibliography
+% While you can just create a super simple bibliography directly in your documents and format it completely yourself (see <https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management#Embedded_system>)
+% it is far more manageable and consistent to use a system called BibTeX, which allows you to maintain a file of all your sources and takes care of all
+% the formatting for you. It also figures out which sources you use in your documents and only prints these, allowing for a single bibliography file
+% you can use on multiple/all your projects. You can also create bibliographies on a chapter basis, if you prefer.
+% To use it, just load the according package in your preamble, as shown below.
+% Be aware that you need to run a separate program (`bibtex' or`biber') on your latex file for your citations to be rendered. But you usually don't
+% need to run that every time.
+% Also while this example is set up to use `bibtex' (because it is the default in loats of editors), the defaul for this project is the more modern
+% `biber' command, so you need to change your editor accordingly if you omit the `backend=bibtex' option below:
+\usepackage[backend=bibtex]{biblatex}
+
+% now we load our bibliography file. Open it to see what it looks like
+\addbibresource{bibliography.bib}
+
+
+% # document information
+% In your preamble you also list your documents information and metadata. These will be used on the title-page as well as being available throughout
+% the document. Additionally, these documentclasses set up the resulting PDF file with the appropriate Metadata.
+% You can just delety any of this comands or leave them empty if you don't need it for a project.
+% See the following examples and what they create in the PDF file:
+\author{
+	Paul Depping,
+	Moritz Möller
+} % the author and matrikelnr commands could also be on a single line, this is just more readable
+\matrikelnr{
+	1715018,
+	0000000
+}
+\titlehead{BIN-Seminar}
+\subject{Strukturiertes Testen}
+\title{Statische und dynamische Testmethoden}
+\subtitle{Übersicht über verschiedene Testmethoden}
+\date{\today}
+\professor{Denis Beßen}
+
+% Now that you are all set, let's begin with the actual content of the document.
+% Don't forget the corresponding `\end{document}'!
+\begin{document} %----------- beginning of document -----------------------------------------------
+
+% for longer documents it is custom to have different numbering until the first page of actuall content.
+% For that use this command to switch to Roman pagenumbers and turn off chapternumbers:
+\frontmatter
+
+% While you can of course create your own title-page, either with latex or externally, the easiest way is to use the build in command.
+% These classes redefine it to include the HsH-logo (depending on the chosen faculty) and to use the additional data provided in the preamble.
+% You can also use the optional argument to change the title-pages alignment to l,c or r:
+\maketitle[c]
+
+% this command is provided by these documentclasses. It creates a standard Text at the bottom of the page and a line to sign on for every author.
+% You are not restricted to this exact position and can use it where ever you want in your document, if you prefer it at the back, but it there.
+\declarationAuthorship
+
+% # abstract
+% sometimes you are required to also create an abstract. Use this environment for that.
+% It will create a new page and a heading for you as well as indenting the whole text block a little.
+% if you have provided keywords, they will also be put at the end of the abstract.
+\begin{abstract}
+	Testmethoden lassen sich in zwei große Gruppen unterteilen:
+	Statische Tests, welche ohne Ausführung des Programmcodes auskommen, und dynamische Tests, welche den Programmcode ausführen.
+	In dieser Ausarbeitung wird Paul Depping auf statische Testmethoden und Max Möller auf dynamische Testmethoden eingehen
+	und einen Überblick über die verschiedenen Unterkategorien von Tests schaffen.
+\end{abstract}
+
+% This command will create the table of contents (TOC).
+% Keep in mind, that LaTeX can only now about things it has already read. For everything that follows, it relies on temporary files which are created
+% on the fly. So the complete TOC will only be rendered after at leas two LaTeX runs.
+\tableofcontents
+
+% the following command is the counterpiece of the `\frontmatter' command.
+% It resets pagenumbers so that the next chapter is the first with actuall content.
+\mainmatter
+
+
+% now we can begin with the actuall relevant content. So let's beginn by creating the first chapter:
+\chapter{Statische Tests -- Paul Depping} \label{chap: static}
+	\section{Strukturierte Gruppenprüfungen}
+		Beispielzitat \cite{fagan:advances}.
+		\subsection{Grundlagen}
+			\lipsum[1]
+		\subsection{Reviews}
+			\lipsum[1]
+		\subsection{Grundlegende Vorgehensweise}
+			\lipsum[1]
+		\subsection{Rollen und Verantwortlichkeiten}
+			\lipsum[1]
+		\subsection{Reviewarten}
+	\section{Statische Analyse}
+		\lipsum[1-2]
+		\subsection{Compiler als statisches Analysewerkzeug}
+			\lipsum[1]
+		\subsection{Prüfung der Einhaltung von Konventionen und Standards}
+			\lipsum[1]
+		\subsection{Durchführung der Datenflussanalyse}
+			\lipsum[1]
+		\subsection{Durchführung der Kontrollflussanalyse}
+			\lipsum[1]
+		\subsection{Ermittlung von Metriken}
+			\lipsum[1]
+	\section{Korrektheitsbeweise}
+		\lipsum[1-2]
+	\section{Symbolische Programmausführung}
+		\lipsum[1-2]
+
+\chapter{Dynamische Tests -- Moritz Möller} \label{chap: dynamic}
+	\lipsum[1-20]
+
+\noindent\begin{minipage}{\textwidth} % prevent automatic pagebreaks
+	\printbibliography
+	\listoffigures
+	\listoftables
+\end{minipage}
+\end{document}
