@@ -1,0 +1,2 @@
+# BachelorSeminar
+BachelorSeminar LaTeX
