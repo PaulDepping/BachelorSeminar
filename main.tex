@@ -1,39 +1,15 @@
-% # INFO:
-% this file will produce a few warnings, even when working correctly:
-% - using fallback Bibtex backend, cased because of the older backend, which may not support all features
-% - Bad type area setting, caused by using a landscape page. The type area is malformed, but this is no problem if you only include external pages
-
-
-% # choosing a document class:
-% The command below is the first one you will see in pretty much any LaTeX document. It sets up the so called documentclass,
-% which is what determines all of your styling and sets up loads of stuff for you. In general there are classes for pretty much
-% every type of document you could need, but this project provides a few classes specialized for the Hochschule Hannover.
-% You can find information about the classes and the options in the README, but here is an example setup with load of comments:
 \documentclass[	%----------------------Preamble---------------------------------------------------%
 		fontsize=11pt,  % fontsize
 		a4paper,	    % papersize
 		%twoside,		% double sided layout
-		german,		% document language (also numberingsystem)
-		%ngerman,		% document language (also numberingsystem)
+		ngerman,		% document language (also numberingsystem)
+		%german,		% document language (also numberingsystem)
 		sans,			% font type (sans/roman)
 		f4,				% HsH facultie (f1-f5)
 		%draft			% quicker compilations, images are not included
 	]{HsH-report}		% documentclass
 
 
-% # the preamble:
-% everything between `\docuemtnclass' and `\begin{document}' is called the preamble. Here you configure all settings for your document.
-% The `\documentclass' command is actually part of that configuration. Lets see what you could do here:
-
-
-% # packages
-% To extend LaTeXes basic functionality, you can load additional packages. Some are already loaded, but others you load in as needed.
-% Check the README about what's already loaded and what's recommended.
-% Also, this classfiles automaticly check for a file called `config.tex', in which you can collect common configurations and reuse them across
-% files in this and/or multiple projects. If you use the full template from GitLab, it provied a `config.tex' which only applies the settings,
-% if the corresponding package is loaded, making it even more reusable.
-%
-% Here are some packages we are going to need with some explanations:
 \usepackage{color}		% for colouring stuff
 \usepackage{siunitx}	% units
 \usepackage{listings}	% including formated code snippets
@@ -43,33 +19,14 @@
 \usepackage{amssymb}	% for spectial Math symbols
 \usepackage{enumitem}	% more list options
 \usepackage{lipsum}		% dummy text
+\usepackage{biblatex}
 
-
-% # bibliography
-% While you can just create a super simple bibliography directly in your documents and format it completely yourself (see <https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management#Embedded_system>)
-% it is far more manageable and consistent to use a system called BibTeX, which allows you to maintain a file of all your sources and takes care of all
-% the formatting for you. It also figures out which sources you use in your documents and only prints these, allowing for a single bibliography file
-% you can use on multiple/all your projects. You can also create bibliographies on a chapter basis, if you prefer.
-% To use it, just load the according package in your preamble, as shown below.
-% Be aware that you need to run a separate program (`bibtex' or`biber') on your latex file for your citations to be rendered. But you usually don't
-% need to run that every time.
-% Also while this example is set up to use `bibtex' (because it is the default in loats of editors), the defaul for this project is the more modern
-% `biber' command, so you need to change your editor accordingly if you omit the `backend=bibtex' option below:
-\usepackage[backend=bibtex]{biblatex}
-
-% now we load our bibliography file. Open it to see what it looks like
 \addbibresource{bibliography.bib}
 
-
-% # document information
-% In your preamble you also list your documents information and metadata. These will be used on the title-page as well as being available throughout
-% the document. Additionally, these documentclasses set up the resulting PDF file with the appropriate Metadata.
-% You can just delety any of this comands or leave them empty if you don't need it for a project.
-% See the following examples and what they create in the PDF file:
 \author{
 	Paul Depping,
 	Moritz Möller
-} % the author and matrikelnr commands could also be on a single line, this is just more readable
+} 
 \matrikelnr{
 	1715018,
 	1714792
@@ -81,80 +38,379 @@
 \date{\today}
 \professor{Denis Beßen}
 
-% Now that you are all set, let's begin with the actual content of the document.
-% Don't forget the corresponding `\end{document}'!
 \begin{document} %----------- beginning of document -----------------------------------------------
 
-% for longer documents it is custom to have different numbering until the first page of actuall content.
-% For that use this command to switch to Roman pagenumbers and turn off chapternumbers:
 \frontmatter
 
-% While you can of course create your own title-page, either with latex or externally, the easiest way is to use the build in command.
-% These classes redefine it to include the HsH-logo (depending on the chosen faculty) and to use the additional data provided in the preamble.
-% You can also use the optional argument to change the title-pages alignment to l,c or r:
 \maketitle[c]
 
-% this command is provided by these documentclasses. It creates a standard Text at the bottom of the page and a line to sign on for every author.
-% You are not restricted to this exact position and can use it where ever you want in your document, if you prefer it at the back, but it there.
 \declarationAuthorship
 
-% # abstract
-% sometimes you are required to also create an abstract. Use this environment for that.
-% It will create a new page and a heading for you as well as indenting the whole text block a little.
-% if you have provided keywords, they will also be put at the end of the abstract.
 \begin{abstract}
-	Testmethoden lassen sich in zwei große Gruppen unterteilen:
-	Statische Tests, welche ohne Ausführung des Programmcodes auskommen, und dynamische Tests, welche den Programmcode ausführen.
-	In dieser Ausarbeitung wird Paul Depping auf statische Testmethoden und Max Möller auf dynamische Testmethoden eingehen
-	und einen Überblick über die verschiedenen Unterkategorien von Tests schaffen.
+
+	Testmethoden lassen sich in zwei große Gruppen unterteilen: Statische Tests,
+	welche ohne Ausführung des Programmcodes auskommen, und dynamische Tests,
+	welche den Programmcode ausführen. In dieser Ausarbeitung wird Paul Depping auf
+	statische Testmethoden und Max Möller auf dynamische Testmethoden eingehen und
+	einen Überblick über die verschiedenen Unterkategorien von Tests schaffen.
+
 \end{abstract}
 
-% This command will create the table of contents (TOC).
-% Keep in mind, that LaTeX can only now about things it has already read. For everything that follows, it relies on temporary files which are created
-% on the fly. So the complete TOC will only be rendered after at leas two LaTeX runs.
 \tableofcontents
 
-% the following command is the counterpiece of the `\frontmatter' command.
-% It resets pagenumbers so that the next chapter is the first with actuall content.
 \mainmatter
 
-
-% now we can begin with the actuall relevant content. So let's beginn by creating the first chapter:
 \chapter{Statische Tests -- Paul Depping} \label{chap: static}
-	\section{Strukturierte Gruppenprüfungen}
-		Beispielzitat \cite{fagan:advances}
-		\subsection{Grundlagen}
-			A \cite{dpunkt:basiswissensoftwaretest}.
-		\subsection{Reviews}
-			B \cite{fagan:design}
-			\lipsum[1]
-		\subsection{Grundlegende Vorgehensweise}
-			Hi \cite{freedman:reviews}
-			\lipsum[1]
-		\subsection{Rollen und Verantwortlichkeiten}
-			Testing \cite{hanser:qualität}
-			\lipsum[1]
-		\subsection{Reviewarten}
+Statische Tests sind Testverfahren, welche nicht die Ausführung des
+Programmcodes selbst benötigen.
 
-	\section{Statische Analyse}
-		\lipsum[1-2]
-		\subsection{Compiler als statisches Analysewerkzeug}
-			\lipsum[1]
-		\subsection{Prüfung der Einhaltung von Konventionen und Standards}
-			\lipsum[1]
-		\subsection{Durchführung der Datenflussanalyse}
-			\lipsum[1]
-		\subsection{Durchführung der Kontrollflussanalyse}
-			\lipsum[1]
-		\subsection{Ermittlung von Metriken}
-			\lipsum[1]
-	\section{Korrektheitsbeweise}
-		\lipsum[1-2]
-	\section{Symbolische Programmausführung}
-		\lipsum[1-2]
+Statische Tests reichen von Rewiews mit anderen Entwicklern über Feedback von
+der IDE direkt beim Entwicklungsprozess selbst via statischer Analyse bis hin
+zu mathematischen Korrektheitsbeweisen, welche die vollständige Korrektheit
+eines Programms oder eines Programmteils belegen.
+
+In dieser Ausarbeitung liegt der Fokus auf zwei Kategorien der Statischen
+Testmethoden:
+\begin{enumerate}
+	\item Strukturierte Gruppenprüfungen, in der Form von Reviews und Ähnlichem, und
+	\item Statische Analyse durch Werkzeuge wie Compiler, IDE, Linter.
+\end{enumerate}
+
+Die Statischen Tests sind das Wichtigste Testverfahren, wenn es um die
+Qualitätssicherung von Programmcode selbst geht. Das erwartete Verhalten von
+Programmcode lässt sich nur begrenzt durch statische Tests überprüfen. Es gibt
+allerdings viele Faktoren, welche sich durch dynamische Tests nicht abdecken
+lassen, welche ausschließlich durch statische Tests erfassbar sind. Es gibt
+sehr viel Code, welcher zwar formell richtig funktioniert, aber in Punkten wie
+Lesbarkeit, Verständlichkeit oder Flexibilität eine sehr schlechte Qualität
+hat. Um diese Mängel zu identifizieren und zu beheben, benötigt es der
+statischen Analyse.
+
+\section{Strukturierte Gruppenprüfungen}
+
+Grundsätzlich lassen sich alle Dokumente einer Gruppenprüfung unterziehen. Das
+beinhaltet also sowohl den von Entwicklern geschriebenen Quelltext, als auch
+die von Managern verfassten Anforderungsdokumente. Da wir uns hier jedoch auf
+den primären Anwendungsfall von Gruppenprüfungen fokussieren, werden wir primär
+über Entwickler anstatt Autoren reden, und von Code anstatt Dokumenten. Die
+meisten hier erwähnten Erkenntnisse können jedoch auch verallgemeinert für
+andere Gruppenprüfungen verwendet werden.
+
+\subsection{Grundlagen} \label{section: basics}
+
+Gruppenprüfungen sind sehr vielfältig und hart zu definieren. Trotzdem gibt es
+viele geteilte Merkmale, welche zwischen allen Reviewarten geteilt werden.
+Dieses Kapitel beinhaltet informationen über die allgemeinen Vorteile und
+Risiken von Gruppenprüfungen, über den Ablauf einer Gruppenprüfung und über die
+Rollenverteilung innerhalb einer Gruppenprüfung.
+
+\subsubsection{Warum sollte man regelmäßige Gruppenprüfungen abhalten?}
+
+Regelmäßige Gruppenprüfungen haben viele Vorteile:
+
+\begin{itemize}
+	\item Regelmäßige Gruppenprüfungen führen dazu, dass frühzeitig Fehler gefunden und
+	      beseitigt werden.
+	\item Dadurch, dass Entwickler sich auf Gruppenprüfungen vorbereiten, wird der selbst
+	      verfasste Code bereits beim verfassen kritischer betrachtet. Die Codequalität
+	      wird dadurch bereits vor der eigentlichen Review verbessert.
+	\item Die Gruppenprüfungen selbst sowie die Vorbereitung auf die Gruppenprüfungen
+	      führen zu einer Wissensübertragung zwischen Entwicklern. Dadurch kann vermieden
+	      werden, dass nur eine kleine Anzahl Personen, oder sogar nur eine Person, den
+	      Ablauf von einem Codeabschnitt versteht.
+	\item Gruppenprüfungen tragen dazu bei, dass Entwickler ein Gefühl von
+	      gemeinschaftlicher Verantwortung für das gesamte Projekt bekommen.
+\end{itemize}
+
+\subsubsection{Zu welchen Nachteilen könnten regelmäßige Gruppenprüfungen führen?}
+
+Das größte Problem von Gruppenprüfungen kann der Psychologische faktor auf den
+Entwickler sein. Wenn die Reviewsitzung nicht gut geplant und moderiert wird,
+kann das Gefühl aufkommen, dass nicht der Code geprüft wird, sondern der
+Entwickler selbst bloßgestellt wird. Dies kann zu einer negativen Einstellung
+von Entwicklern zu Gruppenprüfung führen. Außerdem kann dadurch auch die
+Produktivität der Gruppenprüfung selbst verringert werden. Eine gute Planung
+und Moderation ist deshalb unabdingbar.
+
+\subsection{Ablauf nach IEEE 1028}
+
+Der Internationale Standard für Gruppenprüfungen ist \textcite{ieee:1028}.
+Innerhalb dieses Standards ist der Ablauf einer Gruppeninspektion in die
+folgenden 6 Schritte unterteilt:
+\begin{enumerate}
+	\item Planung
+	\item Einführung
+	\item Vorbereitung
+	\item Reviewsitzung
+	\item Überarbeitung
+	\item Nachbereitung
+\end{enumerate}
+
+Je nach konkreter Gruppenprüfungsvariante werden diese Schritte unterschiedlich
+ab. Trotzdem lassen sich die einzelnen Schritte grob beschreiben:
+
+\subsubsection{Planung} \label{planung}
+
+Im Planungsschritt entscheidet das Management, welche Codeabschnitte wie
+geprüft werden sollen, wer als Gutachter dient, wann die Prüfung stattfinden
+wird und so weiter. Hierbei muss mit dem Entwickler des Codes kooperiert
+werden, da dieser versichern muss, dass der Code in einem reviewfähigen Zustand
+ist. Bei der Bestimmung der zu prüfenden Codeabschnitte können verschiedene
+Prioritäten gesetzt werden. Falls gewünscht, kann nur ein Beispielhafter Teil
+des Codes geprüft werden, oder nur die besonders fehleranfällige Teile. Bei
+formelleren Gruppenprüfungsvarianten muss das Management hier noch festlegen,
+anhand welchen Kriterien Regelwerken und Standards der Code geprüft werden
+soll.
+
+\subsubsection{Einführung}
+
+In der Einführung sollen vom Management die anderen Teilnehmern der
+Gruppenprüfung informiert werden. Den anderen Teilnehmern ist ihre Rolle sowie
+alles, was in der Planung definiert wurde, mitzuteilen. Den Teilnehmern soll
+natürlich auch der Code und die Kriterien zukommen.
+
+Die Einführung kann auch ohne Treffen pur schriftlich geschehen.
+
+\subsubsection{Vorbereitung}
+
+Die Gutachter bereiten sich eigenständig auf die Reviewsitzung vor. Je nach
+Gruppenprüfungsart fällt die Tiefe dieser Vorbereitung unterschiedlich aus.
+
+\subsubsection{Reviewsitzung} \label{reviewsitzung}
+
+Die Reviewsitzung findet in Abwesenheit vom Management statt. Die Sitzung wird
+vom Moderator geleitet, und folgt laut \textcite{fruehauf:pruefung} grob
+folgendem Ablauf:
+
+\begin{itemize}
+	\item Die Gutachter stellen ihre Befunde vor. \begin{itemize}
+		      \item Die Befunde dürfen in der Regel nichts betreffen, was außerhalb der Richtlinien
+		            liegt, welche in der \nameref{planung} festgelegt wurde.
+		      \item Die Befunde werden in folgende Kategorien eingeordnet: \begin{itemize}
+			            \item Kritischer Fehler \begin{itemize}
+				                  \item Der entwickelte Code ist für den geplanten Zweck unbrauchbar.
+			                  \end{itemize}
+			            \item Hauptfehler \begin{itemize}
+				                  \item Der entwickelte Code ist für den geplanten Zweck nicht vollständig benutzbar.
+			                  \end{itemize}
+			            \item Nebenfehler \begin{itemize}
+				                  \item Der entwickelte Code ist für den geplanten Zweck bis auf geringfügige Fehler
+				                        wie Rechtschreibfehler benutzbar.
+			                  \end{itemize}
+			            \item gut \begin{itemize}
+				                  \item Der entwickelte Code ist für den geplanten Zweck ohne Probleme nutzbar.
+			                  \end{itemize}
+		            \end{itemize}
+	      \end{itemize}
+	\item Das Reviewteam als ganzes gibt eine Empfehlung an das Management über die
+	      Abnahme des Codes ab. Mögliche Empfehlungen: \begin{itemize}
+		      \item Akzeptiert ohne Überarbeitung
+		      \item Akzeptiert mit Überarbeitung, welche nicht eine weitere Review benötigt
+		      \item Nicht akzeptiert
+	      \end{itemize}
+\end{itemize}
+
+\subsubsection{Überarbeitung}
+
+Der Manager muss entscheiden, ob er der Empfehlung des Reviewteams folgt, oder
+auf eigene Verantwortung gegen die Empfehlung geht. Je nach Empfehlung und
+Entscheidung muss der Entwickler seinen Code nochmals überarbeiten.
+
+\subsubsection{Nachbearbeitung}
+
+Falls der Entwickler seinen Code erneut überarbeitet hat, müssen die
+überarbeiteten Stellen erneut überprüft werden. Falls eine weitere Review nötig
+ist, kann hier die Planung für das nächste Review anfangen. Der Erfolg der
+Sitzung selbst soll auch überprüft werden. Falls langfristig mehrere
+Reviewsitzungen unproduktiv enden, muss das Management überprüfen, ob es einen
+unterliegenden Grund dafür gibt, und diesen aus der Welt schaffen.
+
+\subsection{Rollen und Verantwortlichkeiten}
+\subsubsection{Entwickler/Author}
+
+Die Aufgaben des Entwicklers sind es, dafür zu sorgen, dass sich der Code
+reviewfähig ist, und im Nachhinein eventuelle Nacharbeiten zu tätigen.
+
+Der Entwickler sollte Kritik an seinem Code nicht als Kritik an sich selbst
+auffassen.
+
+\subsubsection{Manager}
+
+Der Manager ist dafür verantwortlich, in der Planung und der Überarbeitung zu
+entscheiden, was von wem wie wann geprüft werden soll, und, ob den Empfehlungen
+der Gutachter gefolt wird. Der Manager nimmt nicht selbst an der Reviewsitzung
+teil, da dies die freie Diskussion der Reviewteilnehmer einschränken könnte.
+
+\subsubsection{Moderator}
+
+Der Moderator ist für einen geordneten Ablauf innerhalb der Reviewsitzung
+verantwortlich. Sollten Gutachter oder Entwickler persönlich werden, muss er
+sofort einschreiten. Der Moderator darf kein Gutachter sein, da er einen
+neutralen Ablauf der Prüfungssitzung garantieren muss.
+
+\subsubsection{Gutachter}
+
+Die Gutachter sind Experten, welche die problematischen Codestellen
+identifizieren. In der Regel ist es sinnvoll, wenn Gutachter mit verschiedenen
+Sichtweisen auf den Code gewählt werden, um den Code von so vielen Perspektiven
+wie möglich zu durchleuchten. Die verschiedenen Schwerpunkte der Gutachter kann
+in der Planung vom Manager festgelegt werden.
+
+\subsubsection{Protokollant}
+
+Der Protokollant soll die Befunde dokumentieren, damit diese nach der Sitzung
+noch nachvollziehbar sind. Dies kann auch der Entwickler selbst sein, da dieser
+am besten Einschätzen kann, wie viele Informationen niedergeschrieben werden
+müssen, damit das Dokument zusammen mit dem Code selbst nachvollziehbar ist.
+
+\subsection{Gruppenprüfungsarten} \label{gruppenprüfungsarten}
+
+Der Übergang zwischen Gruppenprüfungsarten ist grundsätzlich fließend. Trotzdem
+lassen sich einige grobe Kateogien finden, welche im folgenden kurz beschrieben
+werden.
+
+\subsubsection{Walkthrough}
+
+Laut \textcite{balzert:lehrbuch} ist ein Waklthough eine "manuelle, informale
+Prüfmethode, um Fehler, Defekte, Unklarheiten und Probleme in schriftlichen
+Dokumenten zu indentifizieren. Der Autor präsentiert das Dokument in einer
+Sitzung den Gutachtern". Laut \textcite{ieee:1028} ist ein weiteres Ziel die
+Wissensübertragung auf andere Entwickler.
+
+Anders als in den anderen Reviewarten liegt der Fokus auf der Reviewsitzung
+selbst. Die Gutachter bereiten sich wenig bis gar nicht vor.
+
+Da der Umfang der Sitzung sehr klein ist, kann der Autor selbst auch die
+Sitzung leiten. Das kann jedoch auch zu weiteren Problemen führen, wenn dadurch
+fehlerhafte Stellen bewusst nicht präsentiert werden.
+
+\subsubsection{Inspektion} \label{inspektion}
+
+Die Inspektion ist die formalste Reviewart. Innerhalb einer Inspektion folgt
+jeder Schritt einem festen Aufbau, von dem nicht abgewichen werden darf. Im
+Normalfall wird hier der Umfang der Gruppenprüfung sowie die konkreten Ziele
+bei der Planung festgeschrieben.
+
+Die einzelnen Gutachter agieren nach vorher festgelegten Prüfschritten. Die
+Gutachter tragen in der Sitzung nacheinander ihre Fragen. Eine Liste an
+Unstimmigkeiten wird währenddessen vom Moderator erfasst und vom Protokollanten
+dokumentiert.
+
+Nachdem jeder Gutachter seine Fragen gestellt hat, wird die Liste an
+Unstimmigkeiten erneut durchgegangen und diskutiert.
+
+Die Bewertung des Prüfobjekt findet wie in \ref{reviewsitzung} beschrieben
+statt.
+
+\subsubsection{Technisches Review} \label{technischesreview}
+
+Technische Reviews sollen Überprüfen, ob der geschriebene Code mit den damit
+verknüpften Spezifikationen übereinstimmt. Die Auswahl von Gutachtern mit
+Fachwissen, sowie die intensive Vorbereitung dieser auf die Reviewsitzung, ist
+unabdingbar für den Erfolg dieser Reviewart. Für den Ablauf der Reviewsitzung
+gibt es sehr viele unterschiedliche Ausprägungen, vom strikt formellen bis zum
+pur informellen Ablauf. Anders als bei anderen Reviewarten ist offene
+Diskussion hier besonders prioritisiert. Das Finden von Fehlern ist auch
+möglich, steht aber nicht im Vordergrund.
+
+\subsection{Gruppenprüfungen in der Industrie}
+
+Laut \textcite{rigby:review} gibt es einige Trends, welche sich aktuell in
+verschiedenen Firmen entwickeln:
+
+\begin{enumerate}
+	\item Gruppenprüfungen nutzen einen flexiblen und simplen Ablauf, statt einem eher
+	      Formellen. \begin{enumerate}
+		      \item Der Entwickler erstellt eine Änderung und reicht sie zu Review ein.
+		      \item Andere Entwickler diskutieren die Veränderungen und schlagen Verbesserungen
+		            vor.
+		      \item Ein oder mehrere Reviewer akzeptieren die veränderung und fügen es zur
+		            Hauptcodebase hinzu (z.B. dem "main"/"master"-Branch in einem Git Repository).
+	      \end{enumerate}
+	\item Gruppenprüfungen laufen \begin{itemize}
+		      \item frühzeitig
+		      \item schnell
+		      \item und regelmäßig
+	      \end{itemize}
+	      ab.
+	\item Die zu prüfenden Änderungen sind sehr überschaubar. Siehe Abbildung
+	      \ref{fig:changes}.
+	\item Genau zwei Gutachter finden optimal Fehler.
+	\item Gruppenprüfung sind weniger Fehlersuche und mehr Problemlösung in einer Gruppe.
+\end{enumerate}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=10cm]{small_code_changes.png}
+	\caption{Churn: Lines added and removed \protect\cite{rigby:review}}
+	\label{fig:changes}
+\end{figure}
+
+\section{Statische Analyse}
+
+\subsection{Grundlagen}
+
+Die statische Analyse ist ein weiteres wichtiges Mittel zum Finden von Fehlern
+und fehleranfälligen Codeabschnitten. Sie ist auch ein wichtiges Mittel zur
+Qualitätsmessung.
+
+Grundsätzlich kann jedes Dokument, welches einen rein formellen Aufbau hat,
+einer statischen Analyse unterzogen werden. In der Praxis ist in fast allen
+Programmierprojekten der Code selbst das einzige Dokument, was dieser
+Anforderung standhält.
+
+Die statische Analyse kann nicht alle Fehler aufdecken, da das Analysewerkzeug
+nicht erkennen kann, was genau das gewünschte Verhalten genau ist. Potentielle
+Fehler können aufgedeckt werden, da diese oftmals denselben Mustern folgen. Die
+statische Analyse kann jedoch als einziger automatisierbarer Test Fehler wie
+das Nichteinhalten von gesetzten Standards, Konventionen und Richtlinien
+entdecken.
+
+\subsection{Werkzeuge}
+
+Falls eine kompilierte Programmiersprache genutzt wird, wird durch den Compiler
+selbst Syntaxverstöße und unerlaubte Operationen bei Kompilierzeit abgefangen.
+Dies stellt auch eine Form der statischen Analyse dar. Ansonsten überprüfen
+Werkzeuge wie z.B. clang-tidy \cite{clang:tidy} den Einhalt von sonstigen
+Konventionen oder Standards. Die einzelnen Werkzeuge sind in der Regel
+sprachspezifisch. Diese müssen oft im Vorhinein mit den gewünschten
+Sprachkonventionen konfiguriert werden.
+
+Einige Beispiele für mögliche Anwendungsfälle:
+\begin{enumerate}
+	\item Das Überprüfen von Variablen- und Funktionsnamen.
+	\item Das Finden von ungenutzten Parametern und Variablen.
+	\item Das Begrenzen der Länge von Funktionen und Dateien,oder der Länge einzelner
+	      Zeilen.
+	\item Das Detektieren von Totem Code, z.B. Zeilen direkt nach einem "return".
+	\item Das Finden von (potentiellen) Speicherlecks, oder sonstigen Ressourcenlecks.
+\end{enumerate}
+
+\subsection{Daten- und Kontrollflussanalyse}
+
+Die Daten- und Kontrollflussanalyse wurde sowohl von meinem Mitarbeiter Moritz
+Möller genauer beschrieben, und im Detail von einer anderen Gruppe geschrieben.
+Ich führe deshalb nur ein Beispiel an, wie das ganze in einem konkreten
+Codebeispiel aussehen könnte. In Abbildung \ref{fig:datenfluss} ist ein
+Codebeispiel dargestellt, welches folgende Fehler beinhaltet, die durch eine
+Daten- und Kontrollflussanalyse identifiziert werden können:
+
+\begin{itemize}
+	\item Lesen einer Variable, bevor sie definiert wird (Z. 2 \& 3)
+	\item Schreiben einer Variable, ohne, dass sie danach nochmal verwendet wird (Z. 4)
+	\item Toter Code (Z. 8 ist nicht erreichbar)
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=10cm]{code_example.png}
+	\caption{Codebeispiel für die Daten- und Kontrollflussanalyse} \label{fig:datenfluss}
+\end{figure}
 
 \chapter{Dynamische Tests -- Moritz Möller} \label{chap: dynamic}
-	\lipsum[1-20]
+
+\lipsum[1-30]
 
 \printbibliography
+
 \end{document}
