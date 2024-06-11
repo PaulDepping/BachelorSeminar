@@ -51,8 +51,8 @@
 	Testmethoden lassen sich in zwei große Gruppen unterteilen: Statische Tests,
 	welche ohne Ausführung des Programmcodes auskommen, und dynamische Tests,
 	welche den Programmcode ausführen. In dieser Ausarbeitung wird Paul Depping auf
-	statische Testmethoden und Max Möller auf dynamische Testmethoden eingehen und
-	einen Überblick über die verschiedenen Unterkategorien von Tests schaffen.
+	statische Testmethoden und Moritz Möller auf dynamische Testmethoden eingehen
+	und einen Überblick über die verschiedenen Unterkategorien von Tests schaffen.
 
 \end{abstract}
 
@@ -300,7 +300,9 @@ Nachdem jeder Gutachter seine Fragen gestellt hat, wird die Liste an
 Unstimmigkeiten erneut durchgegangen und diskutiert.
 
 Die Bewertung des Prüfobjekt findet wie in \ref{reviewsitzung} beschrieben
-statt.
+statt. Es gibt noch spezielle "Fagan Inspektionen", welche nach Michael Fagan
+benannt sind, da er maßgeblich zur Entwicklung von formellen Inspektionen
+beigetragen hat \cite{Fagan2001}.
 
 \subsubsection{Technisches Review} \label{technischesreview}
 
@@ -408,8 +410,267 @@ Daten- und Kontrollflussanalyse identifiziert werden können:
 \end{figure}
 
 \chapter{Dynamische Tests -- Moritz Möller} \label{chap: dynamic}
+In diesem Abschnitt werden die dynamischen Testmethoden untersucht. Dabei wird
+auf die unterschiedlichen Kategorien eingegangen, in die diese Tests
+eingeordnet werden können und ihre Anwendung anhand von Beispielen erläutert.
 
-\lipsum[1-30]
+\section{Allgemeines}
+
+\subsection{Definition}
+Dynamische Tests werden während der Laufzeit eines Programms durchgeführt, um
+dessen Funktionalitäten und Verhalten unter realen Bedingungen zu evaluieren
+\cite{liggesmeyer:qualitaet}. Diese Tests können jedoch keine vollständige
+Fehlerfreiheit garantieren. Eine vollständige Fehlerfreiheit könnte nur durch
+einen erschöpfenden Test erreicht werden, bei dem alle möglichen Eingabewerte
+getestet werden \cite{liggesmeyer:qualitaet}. Dies ist jedoch ineffizient und
+bereits bei kleinen Programmen mit erheblichem Aufwand verbunden. Ein einfaches
+Beispiel verdeutlicht dies: Ein 4-Byte-Integer kann über vier Milliarden
+mögliche Werte annehmen, welche alle als Eingabe getestet werden müssten.
+
+\subsection{Kategorisierung}
+Eine weit verbreitete Einteilung dynamischer Testtechniken ist die Unterteilung
+in White- und Black-Box Tests. White-Box-Test sind solche, die die interne
+Struktur der Software untersuchen. Dabei werden insbesondere die Codestruktur
+und die logische Funktionsweise getestet. \cite{hanser:qualität} Im Gegensatz
+dazu bleiben bei Black-Box-Tests die internen Strukturen der Software
+verborgen, was dem Namen "Black Box" entspricht. Der Code ist nicht einsehbar,
+und es stehen lediglich Informationen über die Eingaben und Ausgaben des
+Programms zur Verfügung. Basierend auf diesen Informationen werden Testfälle
+entwickelt. Black-Box-Tests eignen sich daher besonders gut zur Überprüfung der
+Spezifikationen der Software. \cite{hanser:qualität}
+
+Diese Einteilung ist jedoch laut Peter Liggesmeyer \cite{liggesmeyer:qualitaet}
+nicht ausreichend, da hierbei teilweise sehr unterschiedliche Tests in dieselbe
+Kategorie eingeordnet werden. Liggesmeyer schlägt eine genauere Einteilung
+anhand der Referenzen der Tests vor.
+
+\subsection{Kategorisierung an Testreferenzen}
+Die Einteilung anhand der Referenzen umfasst die folgenden Kategorien:
+\begin{itemize}
+	\item funktionsorientierte Testmethoden
+	\item strukturorientierte Testmethoden
+	\item diversifizierende Testmethoden
+	\item Bereichtests
+\end{itemize}
+Strukturorientierte Tests werden dabei noch weiter in kontrollflussorientierte und datenflussorientierte Testmethoden unterteilt.
+
+\section{Testmethoden}
+
+\subsection{Funktionsorientierte Testmethoden}
+Bei funktionsorientierten Tests wird anhand der vorgegebenen Spezifikationen
+getestet. Der Fokus liegt darauf, sicherzustellen, dass alle spezifizierten
+Funktionen wie vorgesehen arbeiten und die gewünschten Ergebnisse liefern. Da
+hierbei der konkrete Code nicht betrachtet wird, können funktionsorientierte
+Tests auch als Black-Box-Tests eingeordnet werden. Mit funktionsorientierten
+Tests kann das Erfüllen der Spezifikationen gewährleistet werden, es ist jedoch
+wahrscheinlich, dass noch nicht getesteter Code existiert. Solche Tests allein
+können daher keine einwandfreie Software garantieren. Es ist zudem wichtig zu
+betonen, dass die verschiedenen Testtechniken für den jeweiligen Anwendungsfall
+ausgewählt werden müssen und es keine universell passenden Vorgaben für Tests
+gibt. \cite{liggesmeyer:qualitaet}
+
+\subsubsection{Zustandsorientierte Tests}
+Ein Beispiel für funktionsorientierte Tests sind die zustandsorientierten
+Tests. Diese prüfen das Verhalten des Programms in verschiedenen Zuständen und
+bei Zustandsübergängen. Ziel ist es, sicherzustellen, dass die Software in
+jedem Zustand den Spezifikationen entsprechend reagiert. Zur grafischen
+Darstellung des Verhaltens werden Zustandsdiagramme erstellt (siehe Abb. 2.1).
+Anschließend werden Testfälle entwickelt, die jeden Zustand und jeden
+Zustandsübergang mindestens einmal überprüfen, wodurch die Testvollständigkeit
+erreicht wird. \cite{liggesmeyer:qualitaet} Diese Methode ist besonders wichtig
+für Systeme wie Automaten, Protokolle oder ähnliche Anwendungen.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=10cm]{UML-Zustandsdiagram.png}
+	\caption{Beispiel für ein UML-Zustandsdiagramm \cite{wikipedia:Zustandsdiagramm}}
+\end{figure}
+
+\subsection{Strukturorientierte Testmethoden}
+
+Strukturorientierte Testmethoden sind im Gegensatz zu den funktionsorientierten
+Methoden darauf ausgelegt, die interne Struktur des Codes zu testen
+\cite{liggesmeyer:qualitaet}. Somit können sie als Teilmenge der
+White-Box-Tests angesehen werden. Diese Testmethoden lassen sich weiter in
+kontrollflussorientierte und datenflussorientierte Tests unterteilen.
+
+\subsubsection{Kontrollflussorientierte Testmethoden}
+
+Kontrollflussorientierte Tests sind darauf ausgelegt, Kontrollstrukturelemente
+abzudecken. Dabei wird die Verarbeitungslogik, wie Anweisungen, Schleifen und
+Verzweigungen, geprüft. Dies kann grafisch mithilfe eines Kontrollflussgraphen
+(siehe Abb. 2.3) dargestellt werden. \cite{liggesmeyer:qualitaet}
+
+\subsubsection{Zweigüberdeckungstest}
+Ein hilfreicher kontrollflussorientierter Test ist der Zweigüberdeckungstest.
+Bei diesem Test muss jede Kante in einem Kontrollflussgraphen durchlaufen
+werden, um die Fehlerfreiheit der Software zu gewährleisten.
+\cite{liggesmeyer:qualitaet}
+
+\begin{figure}
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{getMax_Bsp.png}
+		\caption{Ein Codebeispiel}
+	\end{minipage}\hfill
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{Zweig_Dia.png}
+		\caption{Der dazugehörige Kontrollflussgraph}
+	\end{minipage}
+\end{figure}
+
+Konkret an einem Beispiel sieht das wie folgt aus: Für die Funktion aus Abb.
+2.2 lässt sich der Kontrollflussgraph Abb. 2.3 ableiten. Mit diesem lässt sich
+leicht ermitteln, dass drei Testfälle abzudecken sind:
+
+\begin{enumerate}
+	\item „b > a“ und „b >= c“ (erste if-Bedingung wahr)
+	\item „c > a“ und „c > b“ (erste if-Bedingung falsch, else if wahr)
+	\item „a >= b“ und „a >= c“ (erste und zweite Bedingung falsch)
+\end{enumerate}
+
+Diese Fälle können dann mit passenden Eingabewerten getestet werden. Zum
+Beispiel:
+
+\begin{enumerate}
+	\item „a = 3, b = 5, c = 2“
+	\item „a = 2, b = 3, c = 5“
+	\item „a = 5, b = 3, c = 2“
+\end{enumerate}
+
+\subsubsection{Datenflussorientierte Testmethoden}
+Datenflussorientierte Testmethoden konzentrieren sich auf die Prüfung
+sämtlicher Datenzugriffe in einem Programm. Das Ziel ist dabei sicherzustellen,
+dass die Nutzung und der Fluss von Variablen und Datenstrukturen im Code
+korrekt und fehlerfrei sind. Dies ist besonders nützlich für objektorientierten
+Code, da sich bei diesem die Programmierung um Datenobjekte orientiert und
+einen zentralen Aspekt darstellen. Die Korrektheit der Ausgabewerte solcher
+Tests wird anhand der Spezifikation geprüft. \cite{liggesmeyer:qualitaet}
+
+Für datenflussorientierte Tests werden folgende Definition für
+Variablenzugriffe verwendet: „Definition“ (kurz „def“) für schreibenden
+Zugriff, „computational use“ (kurz „c-use“) für den lesenden Zugriff mit
+Benutzung für Berechnungen oder Wertzuweisungen und „predicate use“ (kurz
+„p-use“) für den lesenden Zugriff mit Benutzung für Bedingungen.
+\cite{liggesmeyer:qualitaet}
+
+Zur grafischen Darstellung wird ein erweiterter Kontrollflussgraph verwendet.
+Bei diesem wurden Datenflussattribute hinzugefügt (siehe Abb. 2.5). In diesem
+werden am Anfang und am Ende jeweils globale Variablen aufgeführt. Mit global
+ist in diesem Fall außerhalb des betrachteten Blocks gemeint. Die „p-uses“
+werden im Graphen an die abgehenden Kanten von Knoten für Bedingungen
+geschrieben und „c-uses“ und „def“ an die jeweiligen Knoten.
+\cite{liggesmeyer:qualitaet}
+
+\subsubsection{Def/Uses-Test}
+Der Def/Uses-Test als datenflussorientierter Test wird die Verbindung und der
+Fluss von Daten überprüfen. Dies geschieht an den Stellen wo Variablen
+definiert („defs“) oder verwendet werden („uses“). Der Test ermöglicht die
+Identifizierung nicht referenzierter und uninitialisierter Variablen, sowie das
+Erkennen von falschen oder unerwarteten Datenflüssen.
+\cite{liggesmeyer:qualitaet}
+
+\begin{figure}
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{test_Bsp.png}
+		\caption{Ein Codebeispiel}
+	\end{minipage}\hfill
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{DefsUses_Dia.png}
+		\caption{Der dazugehörige erweiterte Kontrollflussgraph}
+	\end{minipage}
+\end{figure}
+
+Die Durchführung des Def/Uses-Tests erfolgt anhand eines konkreten Beispiels
+wie folgt: Zunächst wird der Kontrollflussgraph basierend auf dem zu testenden
+Quellcode erstellt (vgl. Abb. 2.4 und 2.5). Anschließend werden die "defs" und
+"uses" der Variablen im Programm identifiziert. Im vorliegenden Beispiel sind
+dies die Definitionen und Verwendungen der Variablen x und y:
+
+\begin{itemize}
+	\item Variable x:
+	      \begin{itemize}
+		      \item Defs: Import (Zeile 0)
+		      \item Uses: if (x > 1) (Zeile 2), y = x + 1 (Zeile 3)
+	      \end{itemize}
+	\item Variable y:
+	      \begin{itemize}
+		      \item Defs: int = 2; (Zeile 1), y = x + 1; (Zeile 3)
+		      \item Uses: keine
+	      \end{itemize}
+\end{itemize}
+
+Daraus lassen sich dann die „Definition-Use“ (DU)-Pfade festgestellt. In dem
+Fall hat nur die Variable x zwei Pfade und zwar:
+
+\begin{enumerate}
+	\item Zeile 0 zu Zeile 2
+	\item Zeile 0 zu Zeile 3
+\end{enumerate}
+
+Die Variable y hat keine Pfade, da diese nur definiert, aber nicht benutzt
+wird. Anhand der DU-Pfade können nun Testpfade entworfen werden. Zum Beispiel:
+
+\begin{itemize}
+	\item x = 2, dann muss y am Ende der Funktion den Wert 3 haben
+	\item x = 1, dann muss y den Wert 2 besitzen
+\end{itemize}
+
+\subsection{Diversifizierende Testmethoden}
+Eine heute praktisch kaum noch genutzte Kategorie von Testmethoden sind die
+diversifizierenden Tests. Hierbei werden unterschiedliche Versionen einer
+Software gegeneinander getestet. Dieser Ansatz vereinfacht die Bewertung der
+Korrektheit gegenüber den Spezifikationen, da die unterschiedlichen
+Abstraktionsebenen der Implementierungen wegfallen
+\cite{liggesmeyer:qualitaet}. In der modernen Softwareentwicklung wird der
+Aufwand beziehungsweise die Kosten für solche Tests jedoch als zu hoch
+eingeschätzt, weshalb sie meist vermieden und durch andere Testmethoden ersetzt
+werden.
+
+\subsubsection{Back to Back Test}
+Ein prominentes Beispiel für einen diversifizierenden Test ist der
+Back-to-Back-Test. Bei diesem Verfahren werden mehrere Programmversionen aus
+derselben Spezifikation von unterschiedlichen Entwicklern erstellt. Diese
+Versionen werden anschließend gegeneinander getestet, um potenzielle Fehler
+aufzudecken. Hierbei können jeweils dieselben Testdatensätze verwendet werden.
+\cite{liggesmeyer:qualitaet}
+
+\subsection{Bereichstests:}
+Die Bereichstests stellen eine Kombination einfacher fehlerorientierter
+Testtechniken dar. \cite{liggesmeyer:qualitaet}
+
+\newpage
+
+\subsubsection{Pfadbereichstest}
+Ein Beispiel für einen Bereichstest ist der Pfadbereichstest. Dieser zielt
+darauf ab, Bereichsfehler aufzudecken. Unter Bereichsfehlern versteht man
+hierbei die fehlerhafte Definition von Eingabebereichen, z.B. bei
+if-Bedingungen, die zur Ausführung falscher Programmpfade führen kann. Da
+Fehler oft an den Bereichsgrenzen auftreten, werden diese besonders getestet.
+\cite{liggesmeyer:qualitaet}
+
+Der Pfadbereichstest kombiniert den strukturorientierten Pfadüberdeckungstest
+mit der fehlerorientierten Grenzwertanalyse und der strukturorientierten
+Äquivalenzklassenbildung. \cite{liggesmeyer:qualitaet}
+
+Die Durchführung erfolgt wie folgt: Zunächst werden Eingabewerte zum Erreichen
+eines bestimmten Pfades getestet. Dies ermöglicht die Festlegung der Bereiche,
+die zu diesem Pfad führen sollen (sog. Pfadbedingung). Wenn keine Eingabewerte
+für einen Pfad gefunden werden können, ist dieser nicht ausführbar und es liegt
+ein Fehler in der Programmierung vor. \cite{liggesmeyer:qualitaet}
+
+\chapter{Fazit}
+
+Statische und dynamische Testmethoden haben grundsätzlich unterschiedliche
+Anwendungsbereiche, aber ergänzen sich sehr gut. Statische Tests fokussieren
+sich primär auf Codequalität, während dynamische Tests sich primär auf
+Codekorrektheit beschränken. Beide Überkategorien an Tests sind auf jeden Fall
+unabdingbar für den langfristigen Erfolg eines Programmierprojekts.
 
 \printbibliography
 
